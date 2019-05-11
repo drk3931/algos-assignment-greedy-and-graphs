@@ -1,7 +1,8 @@
 /**
  * Public Transit
- * Author: Your Name and Carolyn Yao
+ * Author: Deepak Khemraj and Carolyn Yao
  * Does this compile? Y/N
+ * Y
  */
 
 /**
@@ -32,8 +33,53 @@ public class FastestRoutePublicTransit {
     int[][] first,
     int[][] freq
   ) {
-    // Your code along with comments here. Feel free to borrow code from any
-    // of the existing method. You can also make new helper methods.
+   
+    /*
+      NOTE: this is implemented but not run on test input for extra credit. 
+      This relies heavily on the code from shortestTime @carolynyao
+    */
+
+
+    int numVertices = lengths[0].length;
+
+    int[] times = new int[numVertices];
+    Boolean[] processed = new Boolean[numVertices];
+
+    for (int v = 0; v < numVertices; v++) {
+      times[v] = Integer.MAX_VALUE;
+      processed[v] = false;
+    }
+
+    times[S] = 0;
+
+    for (int count = 0; count < numVertices - 1 ; count++) {
+      int u = findNextToProcess(times, processed);
+      processed[u] = true;
+
+     
+      for (int v = 0; v < numVertices; v++) {
+
+
+         //In the writeup this is referred to as nextArrivalTime() but it is sufficient to just make it a local integer
+      //this problem differs from the standard implementation because we need to get the extra cost calculation for waiting
+
+      int timeToWait = (times[u] + first[u][v]) % freq[u][v];
+      //for example lets say I have traveled 45 minutes so far and the train comes to a station every 13 minutes
+      //45 % 13 = 6. I have to wait 6 minutes once I get to the station.
+
+      int cumulativeTime = times[u]+lengths[u][v] + timeToWait;
+
+
+        if (!processed[v] && lengths[u][v]!=0 && times[u] != Integer.MAX_VALUE && cumulativeTime < times[v]) {
+          
+          times[v] = cumulativeTime;
+        }
+      }
+    }
+
+    printShortestTimes(times);
+
+
     return 0;
   }
 
@@ -123,6 +169,8 @@ public class FastestRoutePublicTransit {
     };
     FastestRoutePublicTransit t = new FastestRoutePublicTransit();
     t.shortestTime(lengthTimeGraph, 0);
+
+    System.out.println("*MYSHORTESTPATH IS IMPLEMENTED BUT NOT TESTED ON ANY INPUT DATA FOR EXTRA CREDIT*");
 
     // You can create a test case for your implemented method for extra credit below
   }
