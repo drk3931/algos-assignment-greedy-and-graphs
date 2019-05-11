@@ -1,7 +1,10 @@
+import java.util.ArrayList;
+
 /**
  * Physics Experiment
- * Author: Your Name and Carolyn Yao
+ * Author: Deepak Khemraj and Carolyn Yao
  * Does this compile or finish running within 5 seconds? Y/N
+ * Y
  */
 
 /**
@@ -38,6 +41,80 @@ public class PhysicsExperiment {
     int[][] scheduleTable = new int[numStudents + 1][numSteps + 1];
 
     // Your code goes here
+
+
+    /* uncomment to print the input arr
+    for(int i = 0; i < signUpTable.length; i++)
+    {
+      for(int j = 0; j < signUpTable[i].length; j++)
+      {
+        System.out.print(signUpTable[i][j] + " ");
+      }
+      System.out.println();
+    }
+    */
+
+    //start the algorithm by
+    //targeting the longest consecutive sequence that starts at 1
+    int startStepOfNextLongestSequence = 1;
+
+  
+    //this is the greedy part. We increase the startStepOfnextlongestsequence by the largest possible sequence we have available that
+    //start began at its previous value
+    while(startStepOfNextLongestSequence < numSteps)
+    {
+          //for a given startstep this will store the number of consecutive steps for 
+    //each row in the table.
+    int[] consecCountStore = new int[signUpTable.length];
+
+
+ 
+    for(int x = 1; x < signUpTable.length; x++)
+    {
+
+      //we go through each schedule and find the longest continuous sequence by storing
+      //all the sequences into consecCountStore
+      int[] schedule = signUpTable[x];
+      int tmpStartStep= startStepOfNextLongestSequence;
+      for(int y = 1; y < schedule.length; y++)
+      {
+          if(y == tmpStartStep && schedule[y] == 1)
+          {
+            consecCountStore[x]++;
+            tmpStartStep++;
+          }
+      }
+      
+    }
+
+    //we now find out which schedule had the longest conseq seq;
+    int longestConsecSeq = Integer.MIN_VALUE;
+    int longestConseqSeqIndex = 0;
+    for(int z  = 0; z < consecCountStore.length; z++)
+    {
+      if(consecCountStore[z] > longestConsecSeq)
+      {
+        longestConsecSeq = consecCountStore[z];
+        longestConseqSeqIndex = z;
+      }
+      
+    }
+
+
+    //we only want to flip the ints on the nums in the sequence range.
+    for(int q = startStepOfNextLongestSequence; q < startStepOfNextLongestSequence + longestConsecSeq; q++)
+    {
+
+        scheduleTable[longestConseqSeqIndex][q] = 1;
+
+    }
+   
+    //finally we can move on to the next longest consecutive index 
+     startStepOfNextLongestSequence += longestConsecSeq;
+
+    }
+
+
 
     return scheduleTable;
   }
